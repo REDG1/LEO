@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load util_tags %}
+
+
+
+{% block content %}
+
+{% getDebug as debug%}
+{% if debug %}
+
+<script type="module" crossorigin src="http://localhost:3000/src/currentLinks.js"></script>
+{% else %}
+
+    <script type="module" crossorigin src="{% static 'vue/currentLinks.js' %}"></script>
+    <script type="module" crossorigin src="{% static 'vue/assets/axios-CXuHkYsP.js' %}"></script>
+    <script type="module" crossorigin src="{% static 'vue/assets/VSpacer-B6XjHHdU.js' %}"></script>
+
+
+    {% for css_file in 'css'|get_static_files %}
+        <link rel="stylesheet" href="{% static css_file %}"  type="text/css">
+    {% endfor %}
+
+
+{% endif %}
+
+<div id="app">
+    <div id="Links" value="{{Links}}"></div>
+    {% csrf_token %}
+</div>
+
+<script>
+ //console.log(document.getElementById('Links').getAttribute('value'))
+ </script>
+{% endblock content %}

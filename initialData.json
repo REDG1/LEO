@@ -1,0 +1,18 @@
+[
+  {
+    "model": "main.DataProvider",
+    "pk": 1,
+    "fields": {
+      "name": "OMERO"
+
+    }
+  },
+  {
+    "model": "main.DataProvider",
+    "pk": 2,
+    "fields": {
+      "name": "ElabFTW"}
+  }
+]
+
+

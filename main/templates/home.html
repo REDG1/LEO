@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% block content %}
+
+<!-- use of  css -->
+
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap5.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/search.css' %}" type="text/css">
+<!-- use of  js -->
+<script src="{% static 'js/datatables.js' %}" type="application/javascript" ></script>
+<script src="{% static 'js/dataTables.bootstrap5.js' %}" type="application/javascript"></script>
+
+
+
+
+<header class="container-fluid">
+  <div class="container text-center" id="searchBox">
+    <h1 class="txt_gray">Matching Data</h1>
+
+          <div class="input-group">
+              <input class="form-control" id="searchBar" type="text" placeholder="Search"/>
+              <div  class="input-group-text glyphicon-search" data-toggle="tooltip" title="Search">{% bs_icon 'search' %}</div >
+              {% csrf_token %}
+          </div>
+
+
+    </div>
+  </div>
+</header>
+
+<div id="mainBody" class="container text-center">
+
+  <ul id="results" >
+  </ul>
+</div>
+
+
+
+
+<footer class="text-center">
+
+</footer>
+
+
+<script>
+
+
+
+  var keyword = "";
+  var resultArea = $("#results");
+  var searchBar = $("#searchBar");
+  var searchButton = $(".glyphicon-search");
+  var crf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+
+  var searchUrl = "https://en.wikipedia.org/w/api.php";
+
+  var displayResults = function(keyword){
+
+  $.ajax({
+        type: 'POST',
+        url: "{% url 'home:OMEROquery' %}",
+        data: jQuery.param({ csrfmiddlewaretoken: crf, Kvalue: keyword }) ,
+        success: function (data) {
+            if(data.disconected){
+                window.location.href = "{% url 'home:login' %}"
+            }
+          var obj = JSON.stringify(data);
+          obj = JSON.parse(obj);
+
+          console.log(obj)
+          Projects = obj.result.Projects;
+          var elem1 = $('<a>');
+
+
+          for (i = 0; i < Projects.length; i++){
+            var collapse = $('<div  style="margin-top: 2em;" class="collapse" id="collapsePro'+i+'">');
+            var collapseBody = $('<div class="card card-body">');
+            console.log(Projects[i]);
+            title = "Project";
+            var elem2 = $('<li data-bs-toggle="collapse" href="#collapsePro'+i+'" role="button" aria-expanded="false" aria-controls="collapsePro'+i+'" >');
+
+            elem2.append($('<h3>').text(title));
+            elem2.append($('<h4>').text("Name: " + Projects[i]["Name"]));
+
+            elem2.append("<p> <strong>ID: </strong>" + Projects[i]["ID"]+"</p>");
+            elem2.append("<p> <strong>Owner: </strong>" + Projects[i]["Owner"] + "</p>");
+
+            datasets = Projects[i]["Datasets"];
+
+            elem2.append("<p> <strong>Datasets: </strong></p>");
+
+            var elem3 = $('<p style="margin-left: '+ 2 +'em; padding:0px; ">');
+
+            for (j =0; j < Object.keys(datasets).length ; j++){
+
+                elem3.append("<strong>ID: </strong>" + datasets[Object.keys(datasets)[j]]["ID"] + "<strong> Name: </strong>" + datasets[Object.keys(datasets)[j]]["Name"] + "<strong> Owner: </strong>" + datasets[Object.keys(datasets)[j]]["Owner"] );
+
+                images = datasets[Object.keys(datasets)[j]]["Images"]
+                elem3.append("<p style='margin-bottom: 0rem;'><strong>Images: </strong></p>")
+                console.log(Object.keys(images).length)
+
+                var elem4 = $('<p style="margin-left: '+ 4 +'em; padding:0px;margin-bottom: 0rem; font-size: 1.5vmin;">');
+
+                for (k =0; k < Object.keys(images).length ; k++){
+                    elem4.append("<strong>ID: </strong>" + images[Object.keys(images)[k]]["ID"] + " <strong>Name: </strong>" + images[Object.keys(images)[k]]["Name"] +  "<br>");
+
+                }
+                elem3.append(elem4);
+
+            }
+
+
+            exper = Projects[i]["elabData"];
+
+
+            collapseBody.append($('<h3>').text("elabFTW Data"));
+
+
+
+            for (ex =0; ex < Object.keys(exper).length ; ex++){
+                var collapseBody2 = $('<p class ="elabBody" style="margin-left: '+ 2 +'em; padding:0px;margin-bottom: 0rem; font-size: 1.5vmin;" >');
+                collapseBody2.append( "<strong>Title: </strong>" + exper[Object.keys(exper)[ex]]["title"] + "<strong> ID: </strong>" + exper[Object.keys(exper)[ex]]["id"]);
+                collapseBody2.append("<strong  > Created at: </strong>" + exper[Object.keys(exper)[ex]]["created_at"] + "<br>");
+                collapseBody2.append('<div class="elabBody" style="margin-left: 4em;" >' + exper[Object.keys(exper)[ex]]["body"] + '</div> <br>');
+                collapseBody.append(collapseBody2);
+            }
+
+
+
+
+
+            collapse.append(collapseBody);
+            elem3.append(collapse);
+            elem2.append(elem3);
+            elem1.append(elem2);
+
+
+          }
+            //Datasets
+
+        Datasets = obj.result.Dataset;
+        console.log("dataset-section")
+        console.log(Datasets)
+
+          for (i = 0; i < Datasets.length; i++){
+
+            var collapse = $('<div  style="margin-top: 2em;" class="collapse" id="collapseDat'+i+'">');
+            var collapseBody = $('<div class="card card-body">');
+            console.log(Datasets[i]);
+            title = "Dataset";
+
+            var elem2 = $('<li data-bs-toggle="collapse" href="#collapseDat'+i+'" role="button" aria-expanded="false" aria-controls="collapseDat'+i+'" >');
+            elem2.append($('<h3>').text(title));
+            elem2.append($('<h4>').text("Name: " + Datasets[i]["Name"]));
+
+            elem2.append("<p> <strong>ID: </strong>" + Datasets[i]["ID"]+"</p>");
+            elem2.append("<p> <strong>Project: </strong>" + Datasets[i]["Project"] + "</p>");
+
+
+            images = Datasets[i]["Images"]
+
+            elem2.append("<p style='margin-bottom: 0rem;'><strong>Images: </strong></p>")
+            console.log(Object.keys(images).length)
+            var elem3 = $('<p style="margin-left: '+ 2 +'em; padding:0px; font-size: 1.5vmin; ">');
+            for (k =0; k < Object.keys(images).length ; k++){
+                elem3.append("<strong>ID: </strong>" + images[Object.keys(images)[k]]["ID"] + " <strong>Name: </strong>" + images[Object.keys(images)[k]]["Name"] +  "<br>");
+
+            }
+
+            exper = Datasets[i]["elabData"];
+            collapseBody.append($('<h3>').text("elabFTW Data"));
+
+            for (ex =0; ex < Object.keys(exper).length ; ex++){
+                var collapseBody2 = $('<p class ="elabBody" style="margin-left: '+ 2 +'em; padding:0px;margin-bottom: 0rem; font-size: 1.5vmin;" >');
+                collapseBody2.append( "<strong>Title: </strong>" + exper[Object.keys(exper)[ex]]["title"] + "<strong> ID: </strong>" + exper[Object.keys(exper)[ex]]["id"]);
+                collapseBody2.append("<strong  > Created at: </strong>" + exper[Object.keys(exper)[ex]]["created_at"] + "<br>");
+                collapseBody2.append('<div class="elabBody" style="margin-left: 4em;" >' + exper[Object.keys(exper)[ex]]["body"] + '</div> <br>');
+                collapseBody.append(collapseBody2);
+            }
+
+            collapse.append(collapseBody);
+            elem3.append(collapse);
+            elem2.append(elem3);
+            elem1.append(elem2);
+
+          }
+
+
+           //Images
+
+        Images = obj.result.Images;
+        console.log("Image-section")
+        console.log(Images)
+
+          for (i = 0; i < Images.length; i++){
+            var collapse = $('<div  style="margin-top: 2em;" class="collapse" id="collapseImg'+i+'">');
+            var collapseBody = $('<div class="card card-body">');
+            console.log(Images[i]);
+            title = "Image";
+
+            var elem2 = $('<li data-bs-toggle="collapse" href="#collapseImg'+i+'" role="button" aria-expanded="false" aria-controls="collapseImg'+i+'" >');
+            elem2.append($('<h3>').text(title));
+            elem2.append($('<h4>').text("Name: " + Images[i]["Name"]));
+
+            elem2.append("<p> <strong>ID: </strong>" + Images[i]["ID"]+"</p>");
+            elem2.append("<p> <strong>Dataset: </strong>" + Images[i]["Dataset"] + "</p>");
+            elem2.append("<p> <strong>Project: </strong>" + Images[i]["Project"] + "</p>");
+
+
+            Annotations = Images[i]["Annotations"]
+
+            elem2.append("<p style='margin-bottom: 0rem;'><strong>Annotations: </strong></p>")
+            console.log(Object.keys(Annotations))
+            var elem3 = $('<p style="margin-left: '+ 2 +'em; padding:0px; font-size: 1.5vmin; ">');
+            for (k =0; k < Object.keys(Annotations).length ; k++){
+                    key1 = Object.keys(Annotations)[k]
+
+
+                for(l =0; l < Object.keys(Annotations[key1]).length ; l++){
+                    key2 = Object.keys(Annotations[key1])[l]
+
+                    if(key2 == "Type"){
+
+                        elem3.append("  <strong>"+ key2 + ":</strong> "+ Annotations[key1][key2] + "<br>");
+                    }else {
+                        elem3.append("  <strong style='margin-left:2em'>"+ key2 + ":</strong> "+ Annotations[key1][key2] + "<br>");
+                    }
+
+                }
+
+
+            }
+            exper = Images[i]["elabData"];
+            collapseBody.append($('<h3>').text("elabFTW Data"));
+
+            for (ex =0; ex < Object.keys(exper).length ; ex++){
+                var collapseBody2 = $('<p class ="elabBody" style="margin-left: '+ 2 +'em; padding:0px;margin-bottom: 0rem; font-size: 1.5vmin;" >');
+                collapseBody2.append( "<strong>Title: </strong>" + exper[Object.keys(exper)[ex]]["title"] + "<strong> ID: </strong>" + exper[Object.keys(exper)[ex]]["id"]);
+                collapseBody2.append("<strong  > Created at: </strong>" + exper[Object.keys(exper)[ex]]["created_at"] + "<br>");
+                collapseBody2.append('<div class="elabBody" style="margin-left: 4em;" >' + exper[Object.keys(exper)[ex]]["body"] + '</div> <br>');
+                collapseBody.append(collapseBody2);
+            }
+
+            collapse.append(collapseBody);
+            elem3.append(collapse);
+            elem2.append(elem3);
+            elem1.append(elem2);
+
+          }
+
+
+          resultArea.append(elem1);
+
+
+
+
+
+            },
+            error: function (data) {
+
+            }
+        })
+
+      };
+
+  var displayResults2 = function(){
+    $.ajax({
+      url: searchUrl,
+      dataType: 'jsonp',
+      data: {
+        action: 'query',
+        format: 'json',
+        generator: 'search',
+          gsrsearch: keyword,
+          gsrnamespace: 0,
+          gsrlimit: 10,
+        prop:'extracts|pageimages',
+          exchars: 200,
+          exlimit: 'max',
+          explaintext: true,
+          exintro: true,
+          piprop: 'thumbnail',
+          pilimit: 'max',
+          pithumbsize: 200
+      },
+      success: function(json){
+        var results = json.query.pages;
+        $.map(results, function(result){
+          var link = "http://en.wikipedia.org/?curid="+result.pageid;
+          var elem1 = $('<a>');
+          elem1.attr("href",link);
+          elem1.attr("target","_blank");
+          var elem2 = $('<li>');
+          elem2.append($('<h3>').text(result.title));
+          if(result.thumbnail) elem2.append($('<img>').attr('width',150).attr('src',result.thumbnail.source));
+          elem2.append($('<p>').text(result.extract));
+          elem1.append(elem2);
+          resultArea.append(elem1);
+        });
+        $("footer").append("<p>----x--------x----</p>");
+      }
+    });
+  };
+
+  searchButton.click(function(){
+    keyword = searchBar.val();
+    resultArea.empty();
+    $("footer").empty();
+    displayResults(keyword);
+    $("#searchBox").animate({'padding-top':"10"}, 600);
+    $(".container-fluid").animate({height:"15vh"}, 600);
+  });
+
+  searchBar.keypress(function(e){
+      if(e.keyCode==13)
+      $(searchButton).click();
+  });
+
+
+</script>
+
+
+
+{% endblock content %}

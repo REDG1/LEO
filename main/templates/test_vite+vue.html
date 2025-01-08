@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load util_tags %}
+
+
+
+{% block content %}
+<div id="app">
+</div>
+
+
+{{prueba}}
+
+{% getDebug as debug%}
+{% if debug %}
+
+<script type="module" crossorigin src="http://localhost:5173/src/main.js"></script>
+{% else %}
+
+<script type="module" crossorigin src="{% static 'vue/main.js' %}"></script>
+{% endif %}
+
+
+
+{% endblock content %}

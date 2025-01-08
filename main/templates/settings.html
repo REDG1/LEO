@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load util_tags %}
+
+
+
+{% block content %}
+
+{% getDebug as debug%}
+{% if debug %}
+
+<script type="module" crossorigin src="http://localhost:3000/src/settings.js"></script>
+{% else %}
+
+    <script type="module" crossorigin src="{% static 'vue/settings.js' %}"></script>
+    <script type="module" crossorigin src="{% static 'vue/assets/axios-CXuHkYsP.js' %}"></script>
+    <script type="module" crossorigin src="{% static 'vue/assets/VSpacer-B6XjHHdU.js' %}"></script>
+
+    {% for css_file in 'css'|get_static_files %}
+        <link rel="stylesheet" href="{% static css_file %}"  type="text/css">
+    {% endfor %}
+
+{% endif %}
+
+
+<div id="app">
+        <div id="providerSet" value="{{providerSet}}"></div>
+        <div id="providers" value="{{providers}}"></div>
+        <div id="user" value="{{user}}"></div>
+        {% csrf_token %}
+</div>
+
+<script>
+ //console.log(document.getElementById('providerSet').getAttribute('value'))
+ //console.log(document.getElementById('providers').getAttribute('value'))
+ </script>
+
+{% endblock content %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load util_tags %}
+
+
+
+{% block content %}
+
+
+
+<div id="app">[[message]]
+<button @:click="saludar"></button>
+</div>
+
+
+{% getDebug as debug%}
+{% if debug %}
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<!--<script type="module" crossorigin src="http://localhost:5173/src/main.js"></script>-->
+{% else %}
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<!--<script type="module" crossorigin src="{% static 'vue/main.js' %}"></script>-->
+{% endif %}
+
+<script>
+  const { createApp, ref } = Vue
+
+  createApp({
+    delimiters: ["[[", "]]"],
+    setup() {
+      const message = ref('Hello vue! {{prueba}}')
+      const saludar= () => {console.log("clik hola")}
+      return {
+        message, saludar
+      }
+    }
+  }).mount('#app')
+</script>
+
+
+{% endblock content %}

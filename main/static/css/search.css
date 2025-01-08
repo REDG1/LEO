@@ -1,0 +1,135 @@
+body{
+  letter-spacing: 2px;
+  min-height: 101vh;
+}
+
+a:hover, a:active{
+  text-decoration: none;
+}
+
+input[type="text"], select{
+    outline: none;
+}
+
+.col-xs-1{
+  padding:0;
+}
+
+header.container-fluid{
+  margin: 0;
+  background-color: #39404A;
+  box-shadow: 0 0px 3px 3px rgba(0,0,0,.4);
+  height: 200vh;
+  min-height: 150px;
+}
+
+.container{
+  margin: auto;
+  padding: 0 50px;
+}
+
+ul{
+  padding: 0;
+}
+
+li{
+  letter-spacing: 0;
+  padding: 30px;
+  list-style: none;
+  min-height: 200px;
+  background: #fff;
+  margin: 50px auto;
+  text-align: left;
+  -webkit-transition: box-shadow .2s ease-out .2s;
+  -moz-transition: box-shadow .2s ease-out .2s;
+  -o-transition: box-shadow .2s ease-out .2s;
+  transition: box-shadow .2s ease-out .2s;
+  word-spacing: 2px;
+}
+
+h3{
+  margin-top:0;
+  color: #05475e;
+  line-height: 2;
+}
+.elabBody > h1{
+    color: #05475e;
+    font-size: 1rem;
+
+}
+
+li > p{
+  margin-bottom: 0.3rem;
+
+}
+
+
+
+#searchBox{
+  padding-top: 40vh;
+}
+
+button{
+  background: none;
+  border: none;
+}
+
+
+.form.col-xs-12{
+  padding-left: 0;
+}
+
+
+.glyphicon-search{
+  cursor: pointer;
+
+}
+
+.glyphicon-search:hover{
+
+}
+
+.bar{
+  vertical-align: super;
+  font-weight: 700;
+  font-size: 22px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+li:hover{
+  box-shadow: 0 0 15px 15px rgba(0,0,0,.1);
+}
+
+::-webkit-input-placeholder {
+  color: #bbb;
+  opacity: 1;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  color: #bbb;
+  opacity: 1;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  color: #bbb;
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  color: #bbb;
+  opacity: 1;
+}
+
+
+/*********media query starts ***********/
+
+@media screen and (max-width: 420px){
+  #searchBar,.glyphicon{
+    font-size: 16px;
+  }
+
+  h1{
+    font-size: 28px;
+  }
+}

@@ -1,0 +1,25 @@
+
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - ./db:/var/lib/mysql
+    ports:
+      - '3307:3306'
+    command: --max_allowed_packet=1024M
+    environment:
+       MYSQL_USER: 'nfdiUser'
+       MYSQL_PASSWORD: 'nfdiPass'
+       MYSQL_DATABASE: 'nfdiDB'
+       MYSQL_ROOT_PASSWORD: 'nfdiPass'
+  web:
+    build: .
+    command: ["/bin/bash", "-c", "/opt/app/entrypoint.sh"]
+    ports:
+      - 1337:5000
+
+    depends_on:
+      - db
+    env_file:
+      - ./.env.dev
+
